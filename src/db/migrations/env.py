@@ -7,7 +7,9 @@ from alembic import context
 
 from config import settings
 from db.base import Base
-from sites.models import Site  # noqa
+from equipment.models import Equipment  # noqa
+from factory.models import Factory  # noqa
+from sites.models import Site, SiteEquipment  # noqa
 
 config = context.config
 
