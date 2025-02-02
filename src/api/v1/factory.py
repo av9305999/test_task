@@ -28,3 +28,11 @@ async def get_factory(
     factory_id: int
 ):
     return await FactoryService().get(db, factory_id)
+
+
+@router.delete('/{factory_id}/')
+async def delete_factory(
+    db: DbDeps,
+    factory_id: int
+):
+    return await FactoryService().delete(db, factory_id)

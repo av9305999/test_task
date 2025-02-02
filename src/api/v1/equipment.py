@@ -28,3 +28,11 @@ async def get_equipment(
     equipment_id: int
 ):
     return await EquipmentService().get(db, equipment_id)
+
+
+@router.delete('/{equipment_id}/')
+async def delete_equipment(
+    db: DbDeps,
+    equipment_id: int
+):
+    return await EquipmentService().delete(db, equipment_id)

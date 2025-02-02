@@ -30,6 +30,14 @@ async def get_site(
     return await SiteService().get(db, site_id)
 
 
+@router.delete('/{site_id}/')
+async def delete_site(
+    db: DbDeps,
+    site_id: int
+):
+    return await SiteService().delete(db, site_id)
+
+
 @router.post('/{site_id}/set_equipment/')
 async def set_equipment(
     db: DbDeps,
