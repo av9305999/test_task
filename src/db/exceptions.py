@@ -6,3 +6,7 @@ class MessageException(Exception):
 
 class DoesNotExists(MessageException):
     pass
+
+
+class AlreadyExistsError(MessageException):
+    pass

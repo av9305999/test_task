@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, UniqueConstraint
 
 from db.base import Base
 from db.tablenames import (
@@ -28,6 +28,11 @@ class Site(Base):
 
 class SiteEquipment(Base):
     __tablename__ = SITE_EQUIPMENT_TABLE
+    __table_args__ = (
+        UniqueConstraint(
+            'site_id', 'equipment_id'
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
 

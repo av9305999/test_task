@@ -11,12 +11,19 @@ from api.v1.sites import router as sites_router
 from api.v1.setup import router as setup_router
 from api.v1.hierarchy import router as hierarchy_router
 from config import settings
-from db.exceptions import DoesNotExists
+from db.exceptions import DoesNotExists, AlreadyExistsError
 
 
 async def on_not_found(request: Request, exc: DoesNotExists):
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
+        detail=exc.message
+    )
+
+
+async def on_already_exist(request: Request, exc: AlreadyExistsError):
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
         detail=exc.message
     )
 
@@ -60,5 +67,6 @@ def init_app() -> FastAPI:
     app.include_router(v1_router)
     app.exception_handler(RequestValidationError)(on_validation_error)
     app.exception_handler(DoesNotExists)(on_not_found)
+    app.exception_handler(AlreadyExistsError)(on_already_exist)
 
     return app

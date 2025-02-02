@@ -1,9 +1,10 @@
+from sqlalchemy import exists
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.schemas import UniversalModelSchema
 from core.service import BaseModelService
-from db.exceptions import DoesNotExists
+from db.exceptions import DoesNotExists, AlreadyExistsError
 from equipment.service import EquipmentService
 from factory.service import FactoryService
 from sites.models import Site, SiteEquipment
@@ -41,6 +42,19 @@ class SiteService(BaseModelService):
         await session.commit()
         return UniversalModelSchema(**cursor.mappings().first())
 
+    async def exist_site_equipment(
+        self,
+        session: AsyncSession,
+        site_id: int,
+        equipment_id: int
+    ):
+        exists_query = exists(SiteEquipment).where(
+            SiteEquipment.site_id == site_id,
+            SiteEquipment.equipment_id == equipment_id
+        ).select()
+        cursor = await session.execute(exists_query)
+        return cursor.scalar()
+
     async def set_equipment(
         self,
         session: AsyncSession,
@@ -57,6 +71,15 @@ class SiteService(BaseModelService):
         )
         if not site_exist:
             raise DoesNotExists('No such site')
+        exist_site_equipment = await self.exist_site_equipment(
+            session,
+            site_id,
+            equipment_id
+        )
+        if exist_site_equipment:
+            raise AlreadyExistsError(
+                'This equipment already set for this site'
+            )
         query = (
             insert(SiteEquipment)
             .values(
