@@ -8,8 +8,6 @@ from db.tablenames import (
     SITE_EQUIPMENT_TABLE,
     EQUIPMENT_TABLE
 )
-from equipment.models import Equipment
-from factory.models import Factory
 
 
 class Site(Base):
@@ -25,7 +23,7 @@ class Site(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(unique=True)
 
 
 class SiteEquipment(Base):

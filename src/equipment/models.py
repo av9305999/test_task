@@ -8,7 +8,7 @@ class Equipment(Base):
     __tablename__ = EQUIPMENT_TABLE
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(unique=True)
 
     site_equipments: Mapped[list['SiteEquipment']] = relationship(
         'SiteEquipment', back_populates='equipment'
